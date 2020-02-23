@@ -1,3 +1,7 @@
+# webpi-app
+
+[WebPi](https://github.com/rubycho/webpi)'s SPA Client. Compiled script will be injected to WebPi!
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
