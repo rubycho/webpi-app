@@ -6,6 +6,15 @@ import Container from "@material-ui/core/Container";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 
+import {inject, observer} from "mobx-react";
+
+import {StoreType} from "../../store";
+import AuthStore from "../../store/auth";
+
+interface LoginPageProps {
+  [StoreType.AUTH_STORE]?: AuthStore,
+}
+
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginTop: theme.spacing(3),
@@ -13,15 +22,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default function LoginPage() {
+const LoginPage: React.FC<LoginPageProps> = (props) => {
   const classes = useStyles();
+
+  const [username, setUsername] = React.useState('');
+  const [password, setPassword] = React.useState('');
 
   return (
     <Container
       maxWidth="xs"
       className={classes.root}
     >
-      <img src={require('../../assets/logo.png')} />
+      <img
+        alt="logo"
+        src={require('../../assets/logo.png')}
+      />
 
       <Typography variant="h4">
         Hello, Welcome to WebPI;
@@ -31,15 +46,24 @@ export default function LoginPage() {
         fullWidth
         type="text"
         label="username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
       />
       <TextField
         fullWidth
         type="password"
         label="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
       />
-      <Button fullWidth>
+      <Button
+        fullWidth
+        onClick={() => props.authStore?.tryLogin({username, password})}
+      >
         Login
       </Button>
     </Container>
   );
-}
+};
+
+export default inject('authStore')(observer(LoginPage));

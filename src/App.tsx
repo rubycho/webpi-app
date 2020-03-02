@@ -2,22 +2,25 @@ import React from 'react';
 
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
-import {Button} from "@material-ui/core";
 
-export default function App() {
-  const [login, setLogin] = React.useState(false);
+import {inject, observer} from "mobx-react";
+import RootStore, {StoreType} from "./store";
 
-  return (
-    <div>
-      <Button onClick={() => setLogin(!login)}>
-        Toggle
-      </Button>
-
-      {login ?
-        <MainPage />
-        :
-        <LoginPage />
-      }
-    </div>
-  );
+interface AppProps {
+  [StoreType.ROOT_STORE]?: RootStore;
 }
+
+const App: React.FC<AppProps> = (props) => {
+  return (
+    <>
+      {
+        props.rootStore?.authStore.passedLogin ?
+          <MainPage />
+          :
+          <LoginPage />
+      }
+    </>
+  );
+};
+
+export default inject(StoreType.ROOT_STORE)(observer(App));

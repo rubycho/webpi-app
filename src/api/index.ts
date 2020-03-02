@@ -16,6 +16,3 @@ export const diskAPI = new DiskAPI(instance);
 export const gpioAPI = new GPIOAPI(instance);
 export const systemAPI = new SystemAPI(instance);
 export const terminalAPI = new TerminalAPI(instance);
-
-// @ts-ignore
-window.authAPI = authAPI; window.diskAPI = diskAPI; window.gpioAPI = gpioAPI; window.systemAPI = systemAPI; window.terminalAPI = terminalAPI;
