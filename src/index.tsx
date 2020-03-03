@@ -12,7 +12,8 @@ const rootStore = new RootStore();
 ReactDOM.render(
   <Provider
     rootStore={rootStore}
-    authStore={rootStore.authStore}>
+    authStore={rootStore.authStore}
+    systemStore={rootStore.systemStore}>
     <App />
   </Provider>,
   document.getElementById('root'));

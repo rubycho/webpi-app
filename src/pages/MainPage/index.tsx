@@ -8,8 +8,9 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
-import DiskTab from "../../tabs/DiskTab";
 import SystemTab from "../../tabs/SystemTab";
+import ProcessTab from "../../tabs/ProcessTab";
+import DiskTab from "../../tabs/DiskTab";
 import GPIOTab from "../../tabs/GPIOTab";
 import TerminalTab from '../../tabs/TerminalTab'
 
@@ -76,21 +77,25 @@ export default function MainPage() {
           onChange={handleChange}
         >
           <Tab label="System Status" {...a11yProps(0)} />
-          <Tab label="File Manager" {...a11yProps(1)} />
-          <Tab label="GPIO Control" {...a11yProps(2)} />
-          <Tab label="Terminal" {...a11yProps(3)} />
+          <Tab label="Process Status" {...a11yProps(1)} />
+          <Tab label="File Manager" {...a11yProps(2)} />
+          <Tab label="GPIO Control" {...a11yProps(3)} />
+          <Tab label="Terminal" {...a11yProps(4)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
         <SystemTab />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <DiskTab />
+        <ProcessTab />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <GPIOTab />
+        <DiskTab />
       </TabPanel>
       <TabPanel value={value} index={3}>
+        <GPIOTab />
+      </TabPanel>
+      <TabPanel value={value} index={4}>
         <TerminalTab />
       </TabPanel>
     </div>
