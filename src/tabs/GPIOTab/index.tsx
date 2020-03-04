@@ -13,7 +13,6 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 
 import GPIOItem from "./item";
 import HintIconButton from "../../common/HintIconButton";
-import OneInputDialog from "../../common/OneInputDialog";
 
 const useStyles = makeStyles({
   table: {
@@ -26,26 +25,26 @@ export default function GPIOTab() {
 
   return (
     <>
-      <OneInputDialog
-        title="Set mode"
-        content="Please provide a mode value. (0 = IN, Non-0 = OUT)"
-        inputProps={{type: "number"}}
-        onSubmit={() => {}} />
-      <OneInputDialog
-        title="Set value"
-        content="Please provide a value. (0 = LOW, Non-0 = HIGH)"
-        inputProps={{type: "number"}}
-        onSubmit={() => {}} />
-      <OneInputDialog
-        title="Set pwm dutycycle"
-        content="Please provide a dutycycle value. (0 <= dutycycle <= 255)"
-        inputProps={{type: "number", inputProps: {min: 0, max: 255}}}
-        onSubmit={() => {}} />
-      <OneInputDialog
-        title="Set pwm frequency"
-        content="Please provide a frequency value (0 <= freq)"
-        inputProps={{type: "number", inputProps: {min: 0}}}
-        onSubmit={() => {}} />
+      {/*<DefaultDialog*/}
+      {/*  title="Set mode"*/}
+      {/*  content="Please provide a mode value. (0 = IN, Non-0 = OUT)"*/}
+      {/*  inputProps={{type: "number"}}*/}
+      {/*  onSubmit={() => {}} />*/}
+      {/*<DefaultDialog*/}
+      {/*  title="Set value"*/}
+      {/*  content="Please provide a value. (0 = LOW, Non-0 = HIGH)"*/}
+      {/*  inputProps={{type: "number"}}*/}
+      {/*  onSubmit={() => {}} />*/}
+      {/*<DefaultDialog*/}
+      {/*  title="Set pwm dutycycle"*/}
+      {/*  content="Please provide a dutycycle value. (0 <= dutycycle <= 255)"*/}
+      {/*  inputProps={{type: "number", inputProps: {min: 0, max: 255}}}*/}
+      {/*  onSubmit={() => {}} />*/}
+      {/*<DefaultDialog*/}
+      {/*  title="Set pwm frequency"*/}
+      {/*  content="Please provide a frequency value (0 <= freq)"*/}
+      {/*  inputProps={{type: "number", inputProps: {min: 0}}}*/}
+      {/*  onSubmit={() => {}} />*/}
 
       <HintIconButton title="Refresh">
         <RefreshIcon />

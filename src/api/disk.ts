@@ -5,7 +5,7 @@ import {File} from './models/disk';
 
 interface FileForm {
   path: string;
-  file: Blob;
+  file: any;
 }
 
 interface DirForm {
@@ -20,18 +20,19 @@ export class DiskAPI {
     this.axios = axios;
   }
 
-  getDownloadLink(path: string) {
-    return new URL(
-      `/disk/download/?path=${path}`,
-      this.axios.defaults.baseURL || '',
-    ).href;
-  }
-
   listDirectory(path: string) {
-    this.axios.get(`/disk/list/?path=${path}`)
+    return this.axios.get(`/disk/list/?path=${path}`)
       .then(resp => {
         return camelcaseKeys(resp.data) as File[];
       });
+  }
+
+  downloadFile(path: string) {
+    return this.axios.get(
+      `/disk/download/?path=${path}`,
+      { responseType: 'blob' }
+    )
+      .then(resp => resp.data);
   }
 
   uploadFile(form: FileForm) {

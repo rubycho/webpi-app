@@ -14,7 +14,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 
 import TerminalItem from "./item";
-import OneInputDialog from "../../common/OneInputDialog";
 
 const styles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,16 +41,16 @@ export default function TerminalTab () {
   const classes = styles();
   return (
     <>
-      <OneInputDialog
-        title="Provide a password"
-        content="Please provide a password, which was issued on terminal creation."
-        inputProps={{type: "password"}}
-        onSubmit={() => {}}/>
-      <OneInputDialog
-        title="Warning"
-        content="Type 'yes' to terminate this terminal."
-        inputProps={{type: "text"}}
-        onSubmit={() => {}} />
+      {/*<DefaultDialog*/}
+      {/*  title="Provide a password"*/}
+      {/*  content="Please provide a password, which was issued on terminal creation."*/}
+      {/*  inputProps={{type: "password"}}*/}
+      {/*  onSubmit={() => {}}/>*/}
+      {/*<DefaultDialog*/}
+      {/*  title="Warning"*/}
+      {/*  content="Type 'yes' to terminate this terminal."*/}
+      {/*  inputProps={{type: "text"}}*/}
+      {/*  onSubmit={() => {}} />*/}
       <TableContainer
         component={Paper}
         className={classes.common}

@@ -13,7 +13,8 @@ ReactDOM.render(
   <Provider
     rootStore={rootStore}
     authStore={rootStore.authStore}
-    systemStore={rootStore.systemStore}>
+    systemStore={rootStore.systemStore}
+    diskStore={rootStore.diskStore}>
     <App />
   </Provider>,
   document.getElementById('root'));

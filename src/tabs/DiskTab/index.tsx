@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 
 import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid";
@@ -21,7 +21,17 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 
 import DiskItem from "./item";
 import HintIconButton from "../../common/HintIconButton";
-import OneInputDialog from "../../common/OneInputDialog";
+
+import {ChangePathDialog, CreateDirectoryDialog, UploadFileDialog} from "./dialog";
+
+import {inject, observer} from "mobx-react";
+
+import {StoreType} from "../../store";
+import DiskStore from "../../store/disk";
+
+interface DiskTabProps {
+  [StoreType.DISK_STORE]?: DiskStore;
+}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,50 +48,77 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function DiskTab() {
+const DiskTab: React.FC<DiskTabProps> = (props) => {
   const classes = useStyles();
+  const [pDialog, setPDialog] = React.useState(false);
+  const [dDialog, setDDialog] = React.useState(false);
+  const [fDialog, setFDialog] = React.useState(false);
+
+  React.useEffect(() => {
+    props.diskStore?.listDirectory();
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <>
-      <OneInputDialog
-        title="Move to specific path"
-        content="Please provide a valid directory path."
-        inputProps={{type: "text"}}
-        onSubmit={() => {}} />
-      <OneInputDialog
-        title="Create directory"
-        content="Please provide a new-valid directory name."
-        inputProps={{type: "text"}}
-        onSubmit={() => {}} />
-      <OneInputDialog
-        title="Upload file"
-        content="Please provide a file you want to upload."
-        inputProps={{type: "file"}}
-        onSubmit={() => {}}/>
+      <ChangePathDialog
+        open={pDialog}
+        setOpen={setPDialog}
+        onSubmit={v => props.diskStore?.listDirectory(v.path)} />
+      <CreateDirectoryDialog
+        open={dDialog}
+        setOpen={setDDialog}
+        onSubmit={async v => {
+          await props.diskStore?.createDirectory(v.dirname);
+          await props.diskStore?.listDirectory();
+        }} />
+        <UploadFileDialog
+          open={fDialog}
+          setOpen={setFDialog}
+          onSubmit={async v => {
+            await props.diskStore?.uploadFile(v.file);
+            await props.diskStore?.listDirectory();
+          }} />
+
       <Typography variant="h6" className={classes.pathTypo}>
-        /home/pi/
+        {props.diskStore?.path}
       </Typography>
-      <Divider orientation="horizontal" />
+      <Divider orientation="horizontal"/>
       <Grid container alignItems="center">
-        <HintIconButton title="Parent directory">
-          <ArrowUpwardIcon />
+        <HintIconButton
+          title="Parent directory"
+          onClick={() => props.diskStore?.listDirectory('../', true)}
+        >
+          <ArrowUpwardIcon/>
         </HintIconButton>
-        <HintIconButton title="Change path">
-          <EditLocationIcon />
+        <HintIconButton
+          title="Change path"
+          onClick={() => setPDialog(true)}
+        >
+          <EditLocationIcon/>
         </HintIconButton>
         <Divider orientation="vertical" flexItem light={true}/>
-        <HintIconButton title="Create directory">
-          <CreateNewFolderIcon />
+        <HintIconButton
+          title="Create directory"
+          onClick={() => setDDialog(true)}
+        >
+          <CreateNewFolderIcon/>
         </HintIconButton>
-        <HintIconButton title="Upload file">
-          <AddIcon />
+        <HintIconButton
+          title="Upload file"
+          onClick={() => setFDialog(true)}
+        >
+          <AddIcon/>
         </HintIconButton>
         <Divider orientation="vertical" flexItem light={true}/>
-        <HintIconButton title="Refresh">
-          <RefreshIcon />
+        <HintIconButton
+          title="Refresh"
+          onClick={() => props.diskStore?.listDirectory()}
+        >
+          <RefreshIcon/>
         </HintIconButton>
       </Grid>
-      <Divider orientation="horizontal" />
+      <Divider orientation="horizontal"/>
       <TableContainer
         component={Paper}
         className={classes.tContainer}
@@ -98,11 +135,32 @@ export default function DiskTab() {
             </TableRow>
           </TableHead>
           <TableBody>
-            <DiskItem
-              data={{name: '.vimrc', type: false ? 'dir' : 'file', size: 14}} />
+            {
+              props.diskStore?.files.map(item => {
+                return (
+                  <DiskItem
+                    key={item.name}
+                    data={item}
+                    onBrowse={() => props.diskStore?.listDirectory(item.name, true)}
+                    onDownload={() => props.diskStore?.downloadFile(item.name)}
+                    onDelete={async () => {
+                      if (window.confirm(
+                        'Do you really want to remove this item? ' +
+                        'you can\'t restore it after deletion.'
+                      )) {
+                        await props.diskStore?.deleteItem(item.name);
+                        await props.diskStore?.listDirectory();
+                      }
+                    }}
+                  />
+                );
+              })
+            }
           </TableBody>
         </Table>
       </TableContainer>
     </>
   );
-}
+};
+
+export default inject(StoreType.DISK_STORE)(observer(DiskTab));

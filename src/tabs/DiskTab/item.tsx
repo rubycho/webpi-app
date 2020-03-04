@@ -1,5 +1,6 @@
 import React from "react";
 
+import Link from "@material-ui/core/Link";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 
@@ -8,25 +9,46 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import HintIconButton from "../../common/HintIconButton";
 
+import {File} from "../../api/models/disk";
+
 interface DiskItemProps {
-  data: any;
+  data: File;
+  onBrowse?: () => void;
+  onDownload?: () => void;
+  onDelete?: () => void;
 }
 
 export default function DiskItem(props: DiskItemProps) {
   return (
     <TableRow key={props.data.name}>
       <TableCell component="th" scope="row">
-        {props.data.name}
+        {
+          props.data.isDir ?
+            <Link onClick={props.onBrowse}>
+              {props.data.name}
+            </Link>
+            :
+            <p>{props.data.name}</p>
+        }
       </TableCell>
-      <TableCell align="center">{props.data.type}</TableCell>
+      <TableCell align="center">{props.data.isDir ? 'DIR' : 'FILE'}</TableCell>
       <TableCell align="right">{props.data.size}B</TableCell>
       <TableCell align="center">{props.data.created}</TableCell>
-      <TableCell align="center">{props.data.updated}</TableCell>
+      <TableCell align="center">{props.data.modified}</TableCell>
       <TableCell align="center">
-        <HintIconButton title="Download">
-          <GetAppIcon />
-        </HintIconButton>
-        <HintIconButton title="Delete">
+        {
+          !props.data.isDir &&
+          <HintIconButton
+              title="Download"
+              onClick={props.onDownload}
+          >
+              <GetAppIcon />
+          </HintIconButton>
+        }
+        <HintIconButton
+          title="Delete"
+          onClick={props.onDelete}
+        >
           <DeleteIcon />
         </HintIconButton>
       </TableCell>
