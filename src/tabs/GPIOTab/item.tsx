@@ -9,8 +9,13 @@ import Looks3Icon from '@material-ui/icons/Looks3';
 
 import HintIconButton from "../../common/HintIconButton";
 
+import {Pin} from "../../api/models/gpio";
+
 interface GPIOItemProps {
-  data: any;
+  data: Pin;
+  onMode?: () => void;
+  onValue?: () => void;
+  onPWM?: () => void;
 }
 
 export default function GPIOItem(props: GPIOItemProps) {
@@ -22,17 +27,26 @@ export default function GPIOItem(props: GPIOItemProps) {
       <TableCell align="center">{props.data.value}</TableCell>
       <TableCell align="center">
         {props.data.pwm ?
-          `dutycycle: ${props.data.pwm_dutycycle}, freq: ${props.data.pwm_freq}`:
+          `dutycycle: ${props.data.pwmDutycycle}, freq: ${props.data.pwmFreq}`:
           `No PWM`}
       </TableCell>
       <TableCell align="center">
-        <HintIconButton title="Set mode">
+        <HintIconButton
+          title="Set mode"
+          onClick={props.onMode}
+        >
           <LooksOneIcon />
         </HintIconButton>
-        <HintIconButton title="Set value">
+        <HintIconButton
+          title="Set value"
+          onClick={props.onValue}
+        >
           <LooksTwoIcon />
         </HintIconButton>
-        <HintIconButton title="Set PWM">
+        <HintIconButton
+          title="Set PWM"
+          onClick={props.onPWM}
+        >
           <Looks3Icon />
         </HintIconButton>
       </TableCell>

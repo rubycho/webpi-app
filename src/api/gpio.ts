@@ -9,15 +9,15 @@ export enum PinUpdateType {
   pwm = 'pwm',
 }
 
-interface PinModeForm {
+export interface PinModeForm {
   mode: number;
 }
 
-interface PinValueForm {
+export interface PinValueForm {
   value: number;
 }
 
-interface PinPWMForm {
+export interface PinPWMForm {
   freq: number;
   dutycycle: number;
 }

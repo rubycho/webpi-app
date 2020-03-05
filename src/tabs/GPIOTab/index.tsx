@@ -14,39 +14,64 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 import GPIOItem from "./item";
 import HintIconButton from "../../common/HintIconButton";
 
+import {PinModeDialog, PinPWMDialog, PinValueDialog} from "./dialog";
+
+import {inject, observer} from "mobx-react";
+
+import {StoreType} from "../../store";
+import GPIOStore from "../../store/gpio";
+
+interface GPIOTabProps {
+  [StoreType.GPIO_STORE]?: GPIOStore
+}
+
 const useStyles = makeStyles({
   table: {
     width: '100%',
   },
 });
 
-export default function GPIOTab() {
+const GPIOTab: React.FC<GPIOTabProps> = (props) => {
   const classes = useStyles();
+
+  const [mDialog, setMDialog] = React.useState(false);
+  const [vDialog, setVDialog] = React.useState(false);
+  const [pDialog, setPDialog] = React.useState(false);
+  const [currentPin, setCurrentPin] = React.useState(5);
+
+  React.useEffect(() => {
+    props.gpioStore?.getPins();
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <>
-      {/*<DefaultDialog*/}
-      {/*  title="Set mode"*/}
-      {/*  content="Please provide a mode value. (0 = IN, Non-0 = OUT)"*/}
-      {/*  inputProps={{type: "number"}}*/}
-      {/*  onSubmit={() => {}} />*/}
-      {/*<DefaultDialog*/}
-      {/*  title="Set value"*/}
-      {/*  content="Please provide a value. (0 = LOW, Non-0 = HIGH)"*/}
-      {/*  inputProps={{type: "number"}}*/}
-      {/*  onSubmit={() => {}} />*/}
-      {/*<DefaultDialog*/}
-      {/*  title="Set pwm dutycycle"*/}
-      {/*  content="Please provide a dutycycle value. (0 <= dutycycle <= 255)"*/}
-      {/*  inputProps={{type: "number", inputProps: {min: 0, max: 255}}}*/}
-      {/*  onSubmit={() => {}} />*/}
-      {/*<DefaultDialog*/}
-      {/*  title="Set pwm frequency"*/}
-      {/*  content="Please provide a frequency value (0 <= freq)"*/}
-      {/*  inputProps={{type: "number", inputProps: {min: 0}}}*/}
-      {/*  onSubmit={() => {}} />*/}
+      <PinModeDialog
+        open={mDialog}
+        setOpen={setMDialog}
+        onSubmit={async v => {
+          await props.gpioStore?.setMode(currentPin, v);
+          await props.gpioStore?.getPins();
+        }} />
+      <PinValueDialog
+        open={vDialog}
+        setOpen={setVDialog}
+        onSubmit={async v => {
+          await props.gpioStore?.setValue(currentPin, v);
+          await props.gpioStore?.getPins();
+        }} />
+      <PinPWMDialog
+        open={pDialog}
+        setOpen={setPDialog}
+        onSubmit={async v => {
+          await props.gpioStore?.setPWM(currentPin, v);
+          await props.gpioStore?.getPins();
+        }} />
 
-      <HintIconButton title="Refresh">
+      <HintIconButton
+        title="Refresh"
+        onClick={() => props.gpioStore?.getPins()}
+      >
         <RefreshIcon />
       </HintIconButton>
       <TableContainer component={Paper}>
@@ -62,11 +87,32 @@ export default function GPIOTab() {
             </TableRow>
           </TableHead>
           <TableBody>
-            <GPIOItem
-              data={{pin: 6, type: 'GENERAL', mode: 0 ? 'OUT' : 'IN', value: 0 ? 'High' : 'Low'}} />
+            {
+              props.gpioStore?.pins.map(item => {
+                return (
+                  <GPIOItem
+                    key={item.pin}
+                    data={item}
+                    onMode={() => {
+                      setCurrentPin(item.pin);
+                      setMDialog(true);
+                    }}
+                    onValue={() => {
+                      setCurrentPin(item.pin);
+                      setVDialog(true);
+                    }}
+                    onPWM={() => {
+                      setCurrentPin(item.pin);
+                      setPDialog(true);
+                    }}
+                  />);
+              })
+            }
           </TableBody>
         </Table>
       </TableContainer>
     </>
   );
-}
+};
+
+export default inject(StoreType.GPIO_STORE)(observer(GPIOTab));
