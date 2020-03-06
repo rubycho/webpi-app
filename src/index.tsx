@@ -15,7 +15,8 @@ ReactDOM.render(
     authStore={rootStore.authStore}
     systemStore={rootStore.systemStore}
     diskStore={rootStore.diskStore}
-    gpioStore={rootStore.gpioStore}>
+    gpioStore={rootStore.gpioStore}
+    terminalStore={rootStore.terminalStore}>
     <App />
   </Provider>,
   document.getElementById('root'));

@@ -2,6 +2,7 @@ import AuthStore from "./auth";
 import SystemStore from "./system";
 import DiskStore from "./disk";
 import GPIOStore from "./gpio";
+import TerminalStore from "./terminal";
 
 export enum StoreType {
   ROOT_STORE = 'rootStore',
@@ -9,6 +10,7 @@ export enum StoreType {
   SYSTEM_STORE = 'systemStore',
   DISK_STORE = 'diskStore',
   GPIO_STORE = 'gpioStore',
+  TERMINAL_STORE = 'terminalStore',
 }
 
 export default class RootStore {
@@ -16,4 +18,5 @@ export default class RootStore {
   systemStore: SystemStore = new SystemStore();
   diskStore: DiskStore = new DiskStore();
   gpioStore: GPIOStore = new GPIOStore();
+  terminalStore: TerminalStore = new TerminalStore();
 }
