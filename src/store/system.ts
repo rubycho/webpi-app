@@ -1,47 +1,43 @@
 import {action, observable} from "mobx";
+import Autobind from 'autobind-decorator';
+
+import RootStore from "./index";
 
 import {Process, SystemInfo, systemInfo, SystemStatus, systemStatus} from "../api/models/system";
 import {systemAPI} from "../api";
 
-export default class SystemStore {
+@Autobind
+class SystemStore {
+  private rootStore: RootStore;
+
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
+  }
+
   @observable _systemInfo: SystemInfo = systemInfo();
   @observable _systemStatus: SystemStatus = systemStatus();
   @observable _procCPU: Process[] = [];
   @observable _procMem: Process[] = [];
 
-  @action
-  async getSystemInfo() {
-    try {
+  @action getSystemInfo = () =>
+    this.rootStore.decorate(async () => {
       this._systemInfo = await systemAPI.getSystemInfo();
-    } catch {
-      //
-    }
-  }
+    }, false, null, 'Failed to retrieve system info.');
 
-  @action
-  async getSystemStatus() {
-    try {
+  @action getSystemStatus = () =>
+    this.rootStore.decorate(async () => {
       this._systemStatus = await systemAPI.getSystemStatus();
-    } catch {
-      //
-    }
-  }
+    }, false, null, 'Failed to retrieve system status.');
 
-  @action
-  async getProcCPU() {
-    try {
+  @action getProcCPU = () =>
+    this.rootStore.decorate(async () => {
       this._procCPU = await systemAPI.getProcCPU()
-    } catch {
-      //
-    }
-  }
+    }, false, null, 'Failed to retrieve process info.');
 
-  @action
-  async getProcMem() {
-    try {
+  @action getProcMem = () =>
+    this.rootStore.decorate(async () => {
       this._procMem = await systemAPI.getProcMem();
-    } catch {
-      //
-    }
-  }
+    }, false, null, 'Failed to retrieve process info.');
 }
+
+export default SystemStore;

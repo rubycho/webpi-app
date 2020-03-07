@@ -21,7 +21,7 @@ interface GPIOItemProps {
 export default function GPIOItem(props: GPIOItemProps) {
   return (
     <TableRow>
-      <TableCell component="th" scope="row">{props.data.pin}</TableCell>
+      <TableCell component="th" scope="row" align="center">{props.data.pin}</TableCell>
       <TableCell align="center">{props.data.type}</TableCell>
       <TableCell align="center">{props.data.mode}</TableCell>
       <TableCell align="center">{props.data.value}</TableCell>

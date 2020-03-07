@@ -3,6 +3,7 @@ import SystemStore from "./system";
 import DiskStore from "./disk";
 import GPIOStore from "./gpio";
 import TerminalStore from "./terminal";
+import PromiseStore from "./promise";
 
 export enum StoreType {
   ROOT_STORE = 'rootStore',
@@ -13,10 +14,10 @@ export enum StoreType {
   TERMINAL_STORE = 'terminalStore',
 }
 
-export default class RootStore {
-  authStore: AuthStore = new AuthStore();
-  systemStore: SystemStore = new SystemStore();
-  diskStore: DiskStore = new DiskStore();
-  gpioStore: GPIOStore = new GPIOStore();
-  terminalStore: TerminalStore = new TerminalStore();
+export default class RootStore extends PromiseStore {
+  authStore: AuthStore = new AuthStore(this);
+  systemStore: SystemStore = new SystemStore(this);
+  diskStore: DiskStore = new DiskStore(this);
+  gpioStore: GPIOStore = new GPIOStore(this);
+  terminalStore: TerminalStore = new TerminalStore(this);
 }

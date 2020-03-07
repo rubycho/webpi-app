@@ -1,45 +1,41 @@
 import {action, observable} from "mobx";
+import Autobind from 'autobind-decorator';
+
+import RootStore from "./index";
 
 import {gpioAPI} from "../api";
 import {Pin} from "../api/models/gpio";
 import {PinModeForm, PinPWMForm, PinUpdateType, PinValueForm} from "../api/gpio";
 
-export default class GPIOStore {
+@Autobind
+class GPIOStore {
+  private rootStore: RootStore;
+
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
+  }
+
   @observable pins: Pin[] = [];
 
-  @action
-  async getPins() {
-    try {
-      this.pins = await gpioAPI.getPins();
-    } catch {
-      //
-    }
-  }
+  @action getPins = () =>
+    this.rootStore.decorate(async () => {
+    this.pins = await gpioAPI.getPins();
+  }, true, null, 'Failed to retrieve pins');
 
-  @action
-  async setMode(pin: number, data: PinModeForm) {
-    try {
+  @action setMode = (pin: number, data: PinModeForm) =>
+    this.rootStore.decorate(async () => {
       await gpioAPI.updatePin(pin, PinUpdateType.mode, data);
-    } catch {
-      //
-    }
-  }
+  }, true, 'Set mode: OK', 'Failed to set mode');
 
-  @action
-  async setValue(pin: number, data: PinValueForm) {
-    try {
+  @action setValue = (pin: number, data: PinValueForm) =>
+    this.rootStore.decorate(async () => {
       await gpioAPI.updatePin(pin, PinUpdateType.value, data);
-    } catch {
-      //
-    }
-  }
+  }, true, 'Set value: OK', 'Failed to set value');
 
-  @action
-  async setPWM(pin: number, data: PinPWMForm) {
-    try {
+  @action setPWM = (pin: number, data: PinPWMForm) =>
+    this.rootStore.decorate(async () => {
       await gpioAPI.updatePin(pin, PinUpdateType.pwm, data);
-    } catch {
-      //
-    }
-  }
+    }, true, 'Set PWM: OK', 'Failed to set PWM');
 }
+
+export default GPIOStore;

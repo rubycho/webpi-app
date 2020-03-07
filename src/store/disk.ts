@@ -1,7 +1,10 @@
 import {action, observable} from "mobx";
+import Autobind from 'autobind-decorator';
 
 import FileSaver from 'file-saver';
 import Path from 'path';
+
+import RootStore from "./index";
 
 import {File} from "../api/models/disk";
 import {diskAPI} from "../api";
@@ -11,64 +14,51 @@ const compareFile = (f1: File, f2: File) => {
   else return f1.isDir ? -1 : 1;
 };
 
-export default class DiskStore {
+@Autobind
+class DiskStore {
+  private rootStore: RootStore;
+
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
+  }
+
   @observable path: string = '/home/pi/';
   @observable files: File[] = [];
 
-  @action
-  async listDirectory(path?: string, append?: boolean) {
-    let tmpPath = this.path;
-    if (path)
-      if (append) tmpPath = Path.join(this.path, path);
-      else tmpPath = path;
+  @action listDirectory = (path?: string, append?: boolean) =>
+    this.rootStore.decorate(async () => {
+      let tmpPath = this.path;
+      if (path)
+        if (append) tmpPath = Path.join(this.path, path);
+        else tmpPath = path;
 
-    try {
       this.files = await diskAPI.listDirectory(tmpPath);
       this.files = this.files.slice().sort(compareFile);
       this.path = tmpPath;
-    } catch {
-      //
-    }
-  }
+    }, true, null, 'Failed to retrieve directory items');
 
-  @action
-  async downloadFile(filename: string) {
-    try {
+  @action downloadFile = (filename: string) =>
+    this.rootStore.decorate(async () => {
       const data = await diskAPI.downloadFile(
         Path.join(this.path, filename)
       );
       FileSaver.saveAs(new Blob([data]), filename);
-    } catch {
-      //
-    }
-  }
+    }, true, 'Download: OK', 'Failed to download file');
 
-  @action
-  async createDirectory(dirname: string) {
-    try {
+  @action createDirectory = (dirname: string) =>
+    this.rootStore.decorate(async () => {
       await diskAPI.createDirectory({path: this.path, dirname});
-    } catch {
-      //
-    }
-  }
+    }, true, 'Directory Creation: OK', 'Failed to create directory');
 
-  @action
-  async uploadFile(file: FileList) {
-    try {
+  @action uploadFile = (file: FileList) =>
+    this.rootStore.decorate(async () => {
       await diskAPI.uploadFile({path: this.path, file: file[0]});
-    } catch {
-      //
-    }
-  }
+    }, true, 'Upload: OK', 'Failed to upload file');
 
-  @action
-  async deleteItem(filename: string) {
-    try {
-      await diskAPI.deleteItem(
-        Path.join(this.path, filename)
-      );
-    } catch {
-      //
-    }
-  }
+  @action deleteItem = (filename: string) =>
+    this.rootStore.decorate(async () => {
+      await diskAPI.deleteItem(Path.join(this.path, filename));
+      }, true, 'Deletion: OK', 'Failed to delete item');
 }
+
+export default DiskStore;
