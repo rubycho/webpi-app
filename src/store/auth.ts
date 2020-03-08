@@ -3,7 +3,7 @@ import Autobind from 'autobind-decorator';
 
 import RootStore from "./index";
 
-import {authAPI} from "../api";
+import {instance, authAPI} from "../api";
 import {credentials} from "../api/auth";
 
 @Autobind
@@ -16,9 +16,11 @@ class AuthStore {
 
   @observable passedLogin = false;
 
-  @action tryLogin = (cr: credentials) =>
+  @action tryLogin = (host: string, cr: credentials) =>
     this.rootStore.decorate(
       async () => {
+        instance.defaults.baseURL = host;
+
         const resp = await authAPI.token(cr);
         this.passedLogin = true;
         return resp;

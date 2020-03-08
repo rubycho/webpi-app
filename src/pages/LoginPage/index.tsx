@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const LoginPage: React.FC<LoginPageProps> = (props) => {
   const classes = useStyles();
 
+  const [host, setHost] = React.useState('https://localhost:8080');
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
 
@@ -45,6 +46,13 @@ const LoginPage: React.FC<LoginPageProps> = (props) => {
       <TextField
         fullWidth
         type="text"
+        label="WebPI API Address"
+        value={host}
+        onChange={(e) => setHost(e.target.value)}
+      />
+      <TextField
+        fullWidth
+        type="text"
         label="username"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
@@ -58,7 +66,7 @@ const LoginPage: React.FC<LoginPageProps> = (props) => {
       />
       <Button
         fullWidth
-        onClick={() => props.authStore?.tryLogin({username, password})}
+        onClick={() => props.authStore?.tryLogin(host, {username, password})}
       >
         Login
       </Button>

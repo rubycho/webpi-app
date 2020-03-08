@@ -7,9 +7,7 @@ import {SystemAPI} from "./system";
 import {TerminalAPI} from "./terminal";
 
 
-const instance = axios.create({
-  baseURL: process.env.REACT_APP_API_HOST,
-});
+export const instance = axios.create();
 
 export const authAPI = new AuthAPI(instance);
 export const diskAPI = new DiskAPI(instance);
