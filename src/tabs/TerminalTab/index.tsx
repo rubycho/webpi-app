@@ -40,6 +40,9 @@ const styles = makeStyles((theme: Theme) =>
       width: '100%',
       maxWidth: 740,
     },
+    terminal: {
+      overflowX: 'scroll',
+    },
     divider: {
       visibility: 'hidden',
       color: '0',
@@ -184,7 +187,7 @@ const TerminalTab: React.FC<TerminalTabProps> = (props) => {
 
       <div
         ref={callback}
-        className={classes.common}/>
+        className={`${classes.common} ${classes.terminal}`}/>
       <TextField
         type="text"
         value={input}
