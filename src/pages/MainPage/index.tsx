@@ -12,7 +12,9 @@ import SystemTab from "../../tabs/SystemTab";
 import ProcessTab from "../../tabs/ProcessTab";
 import DiskTab from "../../tabs/DiskTab";
 import GPIOTab from "../../tabs/GPIOTab";
-import TerminalTab from '../../tabs/TerminalTab'
+import TerminalTab from '../../tabs/TerminalTab';
+
+import Logo from "../../assets/logo.png";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -68,7 +70,7 @@ export default function MainPage() {
     <div className={classes.root}>
       <AppBar position="static" color='default'>
         <Avatar
-          src={require('../../assets/logo.png')}
+          src={Logo}
           className={classes.logo}
         />
         <Tabs

@@ -13,6 +13,8 @@ import {inject, observer} from "mobx-react";
 import {StoreType} from "../../store";
 import AuthStore from "../../store/auth";
 
+import Logo from "../../assets/logo.png";
+
 interface LoginPageProps {
   [StoreType.AUTH_STORE]?: AuthStore,
 }
@@ -57,7 +59,7 @@ const LoginPage: React.FC<LoginPageProps> = (props) => {
       >
         <img
           alt="logo"
-          src={require('../../assets/logo.png')}
+          src={Logo}
         />
 
         <Typography variant="h4">
