@@ -2,6 +2,8 @@
 
 [WebPI](https://github.com/rubycho/webpi)'s SPA Client.
 
+Please create an issue on [WebPI Issue](https://github.com/rubycho/webpi/issues) with `webpi-app` label instead of here.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Preview
