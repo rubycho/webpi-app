@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     tContainer: {
       marginTop: theme.spacing(2),
+      maxHeight: 440,
     },
     table: {
       width: '100%',
@@ -123,7 +124,7 @@ const DiskTab: React.FC<DiskTabProps> = (props) => {
         component={Paper}
         className={classes.tContainer}
       >
-        <Table className={classes.table}>
+        <Table stickyHeader className={classes.table}>
           <TableHead>
             <TableRow>
               <TableCell align="center">Name</TableCell>
